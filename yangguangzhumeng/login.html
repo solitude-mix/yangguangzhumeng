@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="js/mui.min.js"></script>
+		<script src="js/common.js"></script>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="css/style.css" />
+		<script type="text/javascript" charset="utf-8">
+			mui.init();
+			window.onload = function() {
+				var oRegBtn = document.getElementById('register');
+				var oPswFgt = document.getElementById('login-forget');
+				var register_btn = document.getElementById('login-register');
+				
+				window.onresize = function(){
+					if(register_btn.offsetTop<400){
+						oRegBtn.style.display = 'none';
+					}
+					if(register_btn.offsetTop>400){
+						oRegBtn.style.display = '';
+					}
+					//if(document.body.offsetHeight<)
+				}
+				oRegBtn.addEventListener('tap',function() {
+					//打开新窗口
+					openPage('register.html', 'register', '0px', '0px');
+				});
+				oPswFgt.addEventListener('tap',function(){
+					openPage('findPswStep1.html','findPsw','0','0');
+				});
+			}
+			
+				//首页返回键处理
+				//处理逻辑：1秒内，连续两次按返回键，则退出应用；
+		  /*var first = null;
+			mui.back = function() {
+				//首次按键，提示‘再按一次退出应用’
+				if (!first) {
+					first = new Date().getTime();
+					mui.toast('再按一次退出心愿有约');
+					setTimeout(function() {
+						first = null;
+					}, 1000);
+				} else {
+					if (new Date().getTime() - first < 1000) {
+						plus.runtime.quit();
+					}
+				}
+			};*/
+		</script>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav register-nav">
+			<h3 class="mui-title register-nav-text">登录</h3>
+			<button class="mui-action-back mui-btn mui-btn-link mui-btn-nav mui-pull-left register-nav-text register-nav-btn">
+				<span class="mui-icon mui-icon-left-nav"></span> 返回
+			</button>
+		</header>
+		<div class="mui-content public-white-bg">
+			<div class="login-content-logo">
+				<p><img class="info" src="images/logo.jpg" alt="" /></p>
+			</div>
+			<div class="mui-card login-list-box">
+				<div class="mui-input-row login-input-border">
+					<label><img src="images/username.jpg" alt="" /></label>
+					<input type="text" class="login-input" placeholder="您注册的手机号">
+				</div>
+				<div class="mui-input-row public-position-relative">
+					<label><img src="images/password.jpg" alt="" /></label>
+					<input type="password" class="login-password" placeholder="心愿有约登陆密码">
+				</div>
+			</div>
+			<div class="login-button">
+				<button type="button" class="mui-btn-block login-button-style" id="btn">登录</button>
+			</div>
+			<p>
+				<div class="public-float-left login-taobao">
+					<h6>其他方式登录</h6></div>
+				<div id="login-forget" class="public-float-right login-forget">
+					<h6>忘记密码？</h6></div>
+			</p>
+			<div id="login-register" class="login-register">
+				<p>
+					<button id="register" type="button" class="mui-btn mui-btn-outlined login-register-btn">
+						注册
+					</button>
+				</p>
+
+			</div>
+		</div>
+		<script src="js/castapp.js"></script>
+		<script>
+			ca.init();
+			var input=ca.tagName('input');
+			var info=ca.className('info');
+			var btn=ca.id('btn');
+			input['1'].addEventListener('tap',function(){
+				var phone=input['0'].value;
+				var request_url=localStorage.getItem('request_url');
+				var img_url=localStorage.getItem('img_url');
+				ca.get({
+					url:request_url+'Login/touxiang',
+					data:{
+						phone_data:phone
+					},
+					succFn:function(data){
+						var json=JSON.parse(data);
+						if(json.touxiang){
+						info['0'].src=img_url+json.touxiang;	
+						}else{
+							info['0'].src="images/logo.jpg";
+						}
+						
+						//alert(json.user_data.touxiang);
+					}
+				})
+			})
+			
+			btn.addEventListener('tap',function(){
+				var phone=input['0'].value;
+				var password=input['1'].value;
+				
+				if(phone==''){
+					ca.prompt('手机号码不能为空');
+					return;
+				}
+				if(phone.length!=11){
+					ca.prompt('号码位数不正确');
+					return;
+				}
+				if(password==''){
+					ca.prompt('密码不能为空');
+					return;
+				}
+				
+				var request_url=localStorage.getItem('request_url');
+				
+				ca.get({
+					url:request_url+'Login/login',
+					data:{
+						phone_data:phone,
+						password_data:password
+					},
+					succFn:function(data){
+						
+						if(data==1){
+							ca.prompt('登录成功');
+							localStorage.setItem('phone',phone);
+							
+							//通知我的界面，把个人中心展示出来
+							var arr = ['my'];
+						ca.sendNotice(arr,'login_do',{});
+						//显示首页
+						ca.getStartInterface(function(obj){
+							obj.show();
+						})
+							
+						}
+						if(data==0){
+							ca.prompt('密码错误');
+							
+						}
+						if(data==2){
+							ca.prompt('手机号码不存在');
+						}
+					}
+				})
+				
+			})
+			
+			
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<script src="js/mui.min.js"></script>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/dongyi.css"/>
+	</head>
+
+	<body>
+		<div id="slider" class="mui-slider" >
+		    <div class="mui-slider-group">
+		        <!-- 第一张 -->
+		        <div class="mui-slider-item">
+		            <img src="images/cbd.jpg">
+		        </div>
+		        <!-- 第二张 -->
+		        <div class="mui-slider-item">
+		                <img src="images/muwu.jpg">
+		        </div>
+		        <!-- 第三张 -->
+		        <div class="mui-slider-item">
+		                <img src="images/shuijiao.jpg">
+		        </div>
+		        <!-- 第四张 -->
+		        <div class="mui-slider-item">
+		            <img src="images/yuantiao.jpg">
+		            <button id="dy_enter">立即进入</button>
+		        </div>
+		    </div>
+		    <div class="mui-slider-indicator">
+		        <div class="mui-indicator mui-active"></div>
+		        <div class="mui-indicator"></div>
+		        <div class="mui-indicator"></div>
+		        <div class="mui-indicator"></div>
+		    </div>
+		</div>
+		<script src="js/castapp.js"></script>
+		<script>
+			ca.init();
+			var data=ca.id('dy_enter');
+			data.addEventListener('tap',function(){
+				ca.setStartpage({
+					url:'navigator.html',
+					id:'navigator'
+				})
+			})
+		</script>
+		
+	</body>
+
+</html>

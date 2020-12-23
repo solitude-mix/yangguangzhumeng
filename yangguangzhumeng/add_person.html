@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<script src="js/mui.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav register-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left register-nav-text"></a>
+		   <h1 class="mui-title  public-nav-text  register-nav-text">添加联系人</h1>
+		</header>
+		<div class="mui-content">
+		    <div class="add-person">
+		    	<img id="img" src="images/avatar_default.jpg" class="img1"/>
+		    	<div class="add-person-fs">
+		    		<div class="mui-input-group">
+			    	    <div class="mui-input-row">
+			    	        <label>姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名:</label>
+			    	        <input type="text" placeholder="请输入姓名或昵称">
+			    	    </div>
+			    	    <div class="mui-input-row">
+			    	        <label>联系方式:</label>
+			    	        <input type="text" placeholder="请输入联系方式">
+			    	    </div>
+			    	</div>
+		    	</div>
+		    	<div class="add-person-btn">
+		    		<button id="btn">确定</button>
+		    	</div>
+		    </div>
+		    
+		</div>
+		<script src="js/castapp.js"></script>
+		<script>
+			ca.init();
+			var img=ca.id('img');
+			var img1=ca.className('img1');
+			var input=ca.tagName('input');
+			var btn=ca.id('btn');
+			
+			var img_url=localStorage.getItem('img_url');
+			img.addEventListener('tap',function(){
+					var arr=[{title:'照相机'},{title:'相册'}];
+					ca.actionSheet(arr,{
+						succFn:function(path){
+							//alert(path);
+							img1.src=img_url+path;
+						},
+						isUpload:true,
+						uploadUrl:img_url+'upload_file.php',
+						
+					})
+				});
+			btn.addEventListener('tap',function(){
+				var head_img=img1.src;
+				var name=input['0'].value;
+				var phone=input['1'].value;
+				if(name==''){
+					ca.prompt('姓名不能为空');
+					return;
+				}
+				if(phone==''){
+					ca.prompt('联系方式不能为空');
+					return;
+				}
+				if(phone.length!=11){
+					ca.prompt('联系方式不正确');
+					return;
+				}
+				var request_url=localStorage.getItem('request_url');
+				ca.get({
+					url:request_url+'User/add_person',
+					data:{
+						head_img:head_img,
+						name:name,
+						phone:phone
+					},
+					succFn:function(data){
+						if(data==1){
+							ca.prompt('添加成功');
+							var arr=['tongxunlu'];
+							ca.sendNotice(arr,'txl',{});
+							ca.closeCurrentInterface();
+						}else{
+							ca.prompt('网络延迟,请重试');
+						}
+					}
+				})
+				
+				
+			});
+		</script>
+	</body>
+
+</html>

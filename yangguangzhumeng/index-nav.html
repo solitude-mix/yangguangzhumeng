@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="js/mui.min.js"></script>
+    <link href="css/mui.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="css/style.css" />
+    <!--<script type="text/javascript" charset="utf-8">
+      	mui.init({ 
+		    subpages:[{ 
+		    url:'index-content.html',//下拉刷新内容页面地址 
+		    id:'index',//内容页面标志
+		     styles:{ top:'44px',
+		     		  bottom:'0px'//内容页面顶部位置,需根据实际页面布局计算，若使用标准mui导航，顶部默认为48px； .....//其它参数定义
+		     } 
+		    }] 
+		});
+      	mui.plusReady(function() {
+				var oCity = document.getElementById('city');
+				var oSInput = document.getElementById('index-search');
+				if(oCity.innerHTML.length == 4){
+	      			oSInput.style.marginLeft = '8%';
+	      		}
+      	});
+    </script>-->
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav index-header">
+		<span class="mui-icon mui-icon-location mui-pull-left index-nav-btn-left" id="local"><label id="position1">兰州</label></span>
+		<div id="index-search" class="index-search-box">
+			<div class="mui-input-row mui-search index-search" style="margin-left: 50px;">
+				<input type="search" placeholder="请输入你感兴趣的课程"/>
+			</div>
+		</div>
+		<button id='btn1' style="position: fixed;" class="mui-pull-right nav-btn">发起</button>
+	</header>
+	<script src="js/castapp.js"></script>
+	<script>
+		ca.init();
+		 ca.createChildInterface({
+				url:'index-content.html',
+				id:'index-content',
+				styles:{
+					top:'44px',
+					bottom:'0px',
+					
+				}
+			});
+		var position=ca.id('position');
+		var g_lng='';
+		var g_lat='';
+		
+		ca.getCurrentPosition({
+				succFn:function(data){
+//					alert(data);
+					var json=JSON.parse(data);
+					//alert(json.status);
+					var result=json.result;
+					var l=result.location;
+					var lng=l.lng;
+					var lat=l.lat;
+					var info=result.addressComponent;
+					var city=info.city;
+					//var street=info.street;
+					console.log(lat);
+					console.log(lng);
+					g_lng=lng;
+					g_lat=lat;
+                    position.innerHTML=city;
+                    //get_school(lng,lat);
+				},
+				errFn:function(error){
+					alert(error);
+				}
+		});
+		
+		//打开地图
+		var local=ca.id('local');
+		local.addEventListener('tap',function(){
+			ca.newInterface({
+				url:'map.html',
+				id:'map'
+			});
+		});
+		
+		//发布
+		var btn=ca.id('btn1');
+//		var login_phone=localStorage.getItem('phone');
+		btn.addEventListener('tap',function(){
+//			if(!login_phone){
+//				ca.prompt('请登录');
+//				ca.newInterface({url:'login.html',id:'login'});
+//				return;
+//			}
+			ca.newInterface({
+				url:'release.html',
+				id:'release'
+			});
+		});
+
+	</script>
+</body>
+</html>
